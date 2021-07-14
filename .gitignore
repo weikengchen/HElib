@@ -1,0 +1,3 @@
+*.o
+src/fhe.a
+src/aes/Test_AES_x
