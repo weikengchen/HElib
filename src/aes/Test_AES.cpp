@@ -11,6 +11,8 @@ namespace NTL {} using namespace NTL;
 #include "homAES.h"
 #include "Ctxt.h"
 
+#include <omp.h>
+
 static long mValues[][14] = { 
 //{ p, phi(m),  m,   d, m1, m2, m3,   g1,    g2,   g3,ord1,ord2,ord3, c_m}
   { 2,  512,    771, 16,771,  0,  0,     5,    0,    0,-32,  0,  0, 100}, // m=(3)*{257} :-( m/phim(m)=1.5 C=77 D=2 E=4
@@ -194,10 +196,13 @@ int main(int argc, char **argv)
   cout << "done in "<<tm<<" seconds\n";
 
   // Perform homomorphic AES
-  cout << "AES encryption "<< std::flush; 
-  vector< Ctxt > doublyEncrypted;
+  cout << "AES encryption 1000 times in parallel"<< std::flush;
   tm = -GetTime();
-  hAES.homAESenc(doublyEncrypted, encryptedAESkey, ptxt);
+  #pragma omp parallel for default(shared)
+  for(int i = 0; i < 1000; i++) {
+	  vector< Ctxt > doublyEncrypted;
+	  hAES.homAESenc(doublyEncrypted, encryptedAESkey, ptxt);
+  }
   tm += GetTime();
 
   // Check that AES succeeeded
