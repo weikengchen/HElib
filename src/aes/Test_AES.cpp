@@ -205,6 +205,9 @@ int main(int argc, char **argv)
   }
   tm += GetTime();
 
+  vector< Ctxt > doublyEncrypted;
+  hAES.homAESenc(doublyEncrypted, encryptedAESkey, ptxt);
+
   // Check that AES succeeeded
   Vec<ZZX> poly(INIT_SIZE, doublyEncrypted.size());
   for (long i=0; i<poly.length(); i++)
